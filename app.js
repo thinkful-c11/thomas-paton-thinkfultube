@@ -37,7 +37,7 @@ function displayYtResults(state, element) {
         	    <p>${obj.snippet.description}</p>
         	    <div class="callout">
        		     <ul class="menu simple">
-          		   <li>${obj.snippet.channelTitle}</li>
+          		   <li><a href="https://www.youtube.com/channel/${obj.snippet.channelId}">${obj.snippet.channelTitle}</a></li>
     		       </ul>
               </div>
   	        </div>`
