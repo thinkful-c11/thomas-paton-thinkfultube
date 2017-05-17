@@ -1,18 +1,21 @@
 // AppState
 appState = {
   results: [],
+  nextPage: '',
+  previousPage: '',
 };
 
 
 
 
 // State Modifications
-function getDataFromApi(searchTerm, callback) {
+function getDataFromApi(searchTerm, callback, token=null) {
   const YT_BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
   const query = {
     part: 'snippet',
     key: 'AIzaSyD10e_Q_yFL_HoW1r8-ivtbJf-XctTa1lM',
     q: searchTerm,
+    pageToken: token,
   }
   $.getJSON(YT_BASE_URL, query, callback);
 };
@@ -20,10 +23,13 @@ function getDataFromApi(searchTerm, callback) {
 function storeData(data) {
   	if (data["items"]) {
       appState.results = data["items"];
+      appState.nextPage = data["nextPageToken"];
+      appState.previousPage = data["prevPageToken"];
     }
   	else {appState.results = 'no results'}
     displayYtResults(appState, $('.js-video-list'));
   };
+
 
 //Callback function to update appState.results
 
