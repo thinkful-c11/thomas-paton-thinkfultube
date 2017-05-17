@@ -22,6 +22,7 @@ function storeData(data) {
       appState.results = data["items"];
     }
   	else {appState.results = 'no results'}
+    displayYtResults(appState, $('.js-video-list'));
   };
 
 //Callback function to update appState.results
@@ -54,6 +55,6 @@ $(function watchSubmit() {
     e.preventDefault();
     const query = $(this).find('.js-query').val();
     getDataFromApi(query, storeData);
-    displayYtResults(appState, $('.js-video-list'));
+    // displayYtResults(appState, $('.js-video-list'));
   });
 });
