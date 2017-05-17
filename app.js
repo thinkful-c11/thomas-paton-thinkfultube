@@ -10,7 +10,8 @@ appState = {
 function getDataFromApi(state, searchTerm) {
   const YT_BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
   const callback = function storeData(data) {
-    state.results = data;
+  	if (data["items"]) {state.results = data["items"];}
+  	else {state.results = 'no results'}
   };
   const query = {
     part: 'snippet',
@@ -24,18 +25,23 @@ function getDataFromApi(state, searchTerm) {
 
 
 // Render Function
-function displayOMDBSearchData(data) {
-  var resultElement = '';
-  if (data.Search) {
-    data.Search.forEach(function(item) {
-     resultElement += '<p>' + item.Title + '</p>';
-    });
-  }
-  else {
-    resultElement += '<p>No results</p>';
-  }
+function displayYtResults(state, element) {
+  const videoHTML = state.results.map(function(obj){
+  	return `<div class="blog-post">
+        	<h3>${obj.snippet.title}</h3>
+        	<img class="thumbnail" src="${obj.snippet.thumbnail.high.url}">
+        	<p>${obj.snippet.description}</p>
+        	<div class="callout">
+         		 <ul class="menu simple">
+            		<li>${obj.snippet.channelTitle}</li>
+          		</ul>
+        	</div>`
+  });
+  
+  const noResults = '<p>No results</p>'
 
-  $('.js-search-results').html(resultElement);
+if (state.results === 'no results') {element.html(noResults);}
+else {element.html(videoHTML);}
 }
 
 // Event Listeners
