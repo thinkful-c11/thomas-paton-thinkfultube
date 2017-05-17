@@ -7,15 +7,8 @@ appState = {
 
 
 // State Modifications
-function getDataFromApi(state, searchTerm, element) {
+function getDataFromApi(searchTerm, callback) {
   const YT_BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
-  const callback = function storeData(data) {
-  	if (data["items"]) {
-      state.results = data["items"];
-      displayYtResults(state, element);
-    }
-  	else {state.results = 'no results'}
-  };
   const query = {
     part: 'snippet',
     key: 'AIzaSyD10e_Q_yFL_HoW1r8-ivtbJf-XctTa1lM',
@@ -23,6 +16,13 @@ function getDataFromApi(state, searchTerm, element) {
   }
   $.getJSON(YT_BASE_URL, query, callback);
 };
+
+function storeData(data) {
+  	if (data["items"]) {
+      appState.results = data["items"];
+    }
+  	else {appState.results = 'no results'}
+  };
 
 //Callback function to update appState.results
 
@@ -53,6 +53,7 @@ $(function watchSubmit() {
   $('.js-search-form').submit(function(e) {
     e.preventDefault();
     const query = $(this).find('.js-query').val();
-    getDataFromApi(appState, query, $('.js-video-list'));
+    getDataFromApi(query, storeData);
+    displayYtResults(appState, $('.js-video-list'));
   });
 });
