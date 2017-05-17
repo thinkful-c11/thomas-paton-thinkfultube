@@ -3,10 +3,8 @@ appState = {
   results: [],
   nextPage: '',
   previousPage: '',
+  currentQuery: '',
 };
-
-
-
 
 // State Modifications
 function getDataFromApi(searchTerm, callback, token=null) {
@@ -20,6 +18,11 @@ function getDataFromApi(searchTerm, callback, token=null) {
   $.getJSON(YT_BASE_URL, query, callback);
 };
 
+function storeQuery(state, query) {
+  appState.currentQuery = query;
+}
+
+// Callback Functions
 function storeData(data) {
   	if (data["items"]) {
       appState.results = data["items"];
@@ -31,7 +34,6 @@ function storeData(data) {
   };
 
 
-//Callback function to update appState.results
 
 
 // Render Function
@@ -60,7 +62,16 @@ $(function watchSubmit() {
   $('.js-search-form').submit(function(e) {
     e.preventDefault();
     const query = $(this).find('.js-query').val();
+    storeQuery(appState, query);
     getDataFromApi(query, storeData);
     // displayYtResults(appState, $('.js-video-list'));
   });
 });
+$(function watchPrevNext() {
+  $('.js-prev').click(function(e) {
+    getDataFromApi(appState.currentQuery, storeData, appState.previousPage);
+  });
+  $('.js-next').click(function(e) {
+    getDataFromApi(appState.currentQuery, storeData, appState.nextPage);
+  })
+})
