@@ -30,18 +30,20 @@ function storeData(data) {
       appState.previousPage = data["prevPageToken"];
     }
   	else {appState.results = 'no results'}
-    displayYtResults(appState, $('.js-video-list'));
+    displayYtResults(appState, $('.js-video-list'), $('.modal-content'));
   };
 
 
 
 
 // Render Function
-function displayYtResults(state, element) {
+function displayYtResults(state, element, modalElement) {
   const videoHTML = state.results.map(function(obj){
   	return `<div class="blog-post">
         	    <h3>${obj.snippet.title}</h3>
-        	    <a href='https://www.youtube.com/watch?v=${obj.id.videoId}'><img class="thumbnail" src="${obj.snippet.thumbnails.high.url}"></a>
+        	    <a href='#'>
+        	    <img class="thumbnail" src="${obj.snippet.thumbnails.high.url}" onclick="openModal();" class="hover-shadow">
+        	    </a>
         	    <p>${obj.snippet.description}</p>
         	    <div class="callout">
        		     <ul class="menu simple">
@@ -49,12 +51,21 @@ function displayYtResults(state, element) {
     		       </ul>
               </div>
   	        </div>`
-  });
+  });//<a href='https://www.youtube.com/watch?v=${obj.id.videoId}'>
 
+  const modal = state.results.map(function(obj){
+  	return 
+  	        `<div class="mySlides">
+       		 	<img src="${obj.snippet.thumbnails.high.url}" style="width:100%">
+    		</div>`
+  });
   const noResults = '<p>No results</p>'
 
   if (state.results === 'no results') {element.html(noResults);}
-  else {element.html(videoHTML);}
+  else {
+  	modalElement.html(modal);
+  	element.html(videoHTML);
+  }
 };
 
 // Event Listeners
