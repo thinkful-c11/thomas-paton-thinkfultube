@@ -33,7 +33,7 @@ function displayYtResults(state, element) {
   const videoHTML = state.results.map(function(obj){
   	return `<div class="blog-post">
         	    <h3>${obj.snippet.title}</h3>
-        	    <img class="thumbnail" src="${obj.snippet.thumbnails.high.url}">
+        	    <a href='https://www.youtube.com/watch?v=${obj.id.videoId}'><img class="thumbnail" src="${obj.snippet.thumbnails.high.url}"></a>
         	    <p>${obj.snippet.description}</p>
         	    <div class="callout">
        		     <ul class="menu simple">
