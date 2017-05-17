@@ -1,16 +1,19 @@
 // AppState
 appState = {
-  results: {},
+  results: [],
 };
 
 
 
 
 // State Modifications
-function getDataFromApi(state, searchTerm) {
+function getDataFromApi(state, searchTerm, element) {
   const YT_BASE_URL = 'https://www.googleapis.com/youtube/v3/search';
   const callback = function storeData(data) {
-  	if (data["items"]) {state.results = data["items"];}
+  	if (data["items"]) {
+      state.results = data["items"];
+      displayYtResults(state, element);
+    }
   	else {state.results = 'no results'}
   };
   const query = {
@@ -28,29 +31,28 @@ function getDataFromApi(state, searchTerm) {
 function displayYtResults(state, element) {
   const videoHTML = state.results.map(function(obj){
   	return `<div class="blog-post">
-        	<h3>${obj.snippet.title}</h3>
-        	<img class="thumbnail" src="${obj.snippet.thumbnail.high.url}">
-        	<p>${obj.snippet.description}</p>
-        	<div class="callout">
-         		 <ul class="menu simple">
-            		<li>${obj.snippet.channelTitle}</li>
-          		</ul>
-        	</div>`
+        	    <h3>${obj.snippet.title}</h3>
+        	    <img class="thumbnail" src="${obj.snippet.thumbnails.high.url}">
+        	    <p>${obj.snippet.description}</p>
+        	    <div class="callout">
+       		     <ul class="menu simple">
+          		   <li>${obj.snippet.channelTitle}</li>
+    		       </ul>
+              </div>
+  	        </div>`
   });
-  
+
   const noResults = '<p>No results</p>'
 
-if (state.results === 'no results') {element.html(noResults);}
-else {element.html(videoHTML);}
-}
+  if (state.results === 'no results') {element.html(noResults);}
+  else {element.html(videoHTML);}
+};
 
 // Event Listeners
-function watchSubmit() {
+$(function watchSubmit() {
   $('.js-search-form').submit(function(e) {
     e.preventDefault();
-    var query = $(this).find('.js-query').val();
-    getDataFromApi(query, displayOMDBSearchData); // replace with State Mod
+    const query = $(this).find('.js-query').val();
+    getDataFromApi(appState, query, $('.js-video-list'));
   });
-}
-
-$(function(){watchSubmit();});
+});
